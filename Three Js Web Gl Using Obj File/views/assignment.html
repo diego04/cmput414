@@ -1,5 +1,6 @@
+
 <div id="info">
-    OBJ loader
+    <button id="toggleMesh" type="button" class="btn btn-primary btn-lg btn-success">Mesh / Solid State</button>
 </div>
 
 
@@ -7,16 +8,22 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
 
 
-<script src="http://threejs.org/build/three.min.js"></script>
-<script src="http://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+<!--script src="https://threejs.org/build/three.min.js"></script-->
+<script src="/public/js/three.min.js"></script>
 
-<script src="http://threejs.org/examples/js/loaders/OBJMTLLoader.js"></script>
-<script src="http://threejs.org/examples/js/loaders/MTLLoader.js"></script>
+<!--script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script-->
+<script src="/public/js/OBJLoader.js"></script>
 
 
+<!--script src="https://threejs.org/examples/js/loaders/OBJMTLLoader.js"></script-->
+<script src="/public/js/OBJMTLLoader.js"></script>
 
-<script src="http://threejs.org/examples/js/Detector.js"></script>
-<script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
+<!--script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script-->
+<script src="/public/js/MTLLoader.js"></script>
+
+
+<script src="/public/js/Detector.js"></script>
+<script src="/public/js/stats.min.js"></script>
 
 
 <script>
@@ -44,41 +51,40 @@
 
     function init() {
 
-        container = document.createElement( 'div' );
-        document.body.appendChild( container );
+        container = document.createElement('div');
+        document.body.appendChild(container);
 
-        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
         camera.position.z = 600;
 
         // scene
 
         scene = new THREE.Scene();
 
-        var ambient = new THREE.AmbientLight( 0x101030 );
-        scene.add( ambient );
+        var ambient = new THREE.AmbientLight(0x101030);
+        scene.add(ambient);
 
-        var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-        directionalLight.position.set( 0, 0, 1 );
-        scene.add( directionalLight );
+        var directionalLight = new THREE.DirectionalLight(0xffeedd);
+        directionalLight.position.set(0, 0, 1);
+        scene.add(directionalLight);
 
 
-        var light = new THREE.PointLight( 0xff0000, 1, 100 );
-        light.position.set( 50, 50, 50 );
-        scene.add( light );
-
+        var light = new THREE.PointLight(0xff0000, 1, 100);
+        light.position.set(50, 50, 50);
+        scene.add(light);
 
 
         // texture
 
         var manager = new THREE.LoadingManager();
-        manager.onProgress = function ( item, loaded, total ) {
+        manager.onProgress = function (item, loaded, total) {
 
-            console.log( item, loaded, total );
+            console.log(item, loaded, total);
 
         };
 
         // model
-        var loader = new THREE.OBJLoader( manager );
+        var loader = new THREE.OBJLoader(manager);
         var loader = new THREE.OBJMTLLoader(manager);
 
 
@@ -86,13 +92,14 @@
         //var texture = new THREE.Texture();
 
 
-        loader.load('/public/'+pathName[2], '/public/male02_dds.mtl', function ( object ) {
+        loader.load('/public/' + pathName[2], '/public/male02_dds.mtl', function (object) {
 
-            object.traverse( function ( child ) {
+
+            object.traverse(function (child) {
 
                 //child.material.map = new THREE.MeshPhongMaterial( { color: 0x00ff00 } )
 
-                if ( child instanceof THREE.Mesh ) {
+                if (child instanceof THREE.Mesh) {
                     console.log(child)
 
                     //child.material.map = texture;
@@ -100,61 +107,68 @@
                 }
 
 
-
-
-
-                /*
-
-                var  geometry = child.geometry;
+                var geometry = child.geometry;
                 //console.log(geometry);
                 //geometry.dynamic = true;
                 material = child.material;
                 mesh = new THREE.Mesh(geometry, material);
-                scene.add(mesh);
+                //scene.add(mesh);
 
                 var useWireFrame = true;
                 if (useWireFrame) {
                     mesh.traverse(function (child) {
-                        if (child instanceof THREE.Mesh)
-                        {
+                        if (child instanceof THREE.Mesh) {
                             child.material.wireframe = true;
-                            child.material.color = new THREE.Color( 0x6893DE  );
+
+                            child.material.color = new THREE.Color(0x6893DE);
                         }
                     });
                 }
-                */
 
 
+            });
 
 
-
-
-            } );
-
-
-
-            object.position.x = - 60;
-            object.rotation.x = 20* Math.PI / 180;
-            object.rotation.z = 20* Math.PI / 180;
+            object.position.x = -60;
+            object.rotation.x = 20 * Math.PI / 180;
+            object.rotation.z = 20 * Math.PI / 180;
             object.scale.x = 60;
             object.scale.y = 60;
             object.scale.z = 60;
             obj = object
             //obj.add(new THREE.MeshPhongMaterial( { color: 0x00ff00 } ))
-            scene.add( obj );
+            scene.add(obj);
 
-            /*
+            function toggleMesh(){
+                object.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                    }
 
-            THIS
+                    var geometry = child.geometry;
+                    material = child.material;
+                    mesh = new THREE.Mesh(geometry, material);
+
+                    var useWireFrame = true;
+                    if (useWireFrame) {
+                        mesh.traverse(function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                if(child.material.wireframe == false){
+                                    child.material.wireframe = true
+                                }else{
+                                    child.material.wireframe = false
+                                }
+                                child.material.color = new THREE.Color(0x6893DE);
+                            }
+                        });
+                    }
 
 
+                });
+            }
 
-            setTimeout(
-                    function() {
-                        scene.remove( obj );
-                    }, 2000);
+            document.getElementById('toggleMesh').addEventListener("click", toggleMesh);
 
-*/
+
             //var geometry = obj.geometry;
             //var materials = obj.materials;
             //mesh = new THREE.Mesh(geometry, materials);
@@ -165,26 +179,27 @@
             //helper.material.color.set( 0x0000ff );
             //scene.add( helper );
 
+
             /*
-            var egh = new THREE.EdgesHelper( obj, 0x00ffff );
-            egh.material.linewidth = 2;
-            scene.add( egh );
-            //scene.add(object)
+             var egh = new THREE.EdgesHelper( obj, 0x00ffff );
+             egh.material.linewidth = 2;
+             scene.add( egh );
+             scene.add(object)
 
-            console.log(obj.matrix)
+             console.log(obj.matrix)
+             */
 
 
-*/
-
-        } );
+        });
 
         renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        container.appendChild( renderer.domElement );
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
 
-        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+        //document.addEventListener('mousemove', onDocumentMouseMove, false);
+        document.addEventListener('contextmenu', onRightCLick, false);
 
-        window.addEventListener( 'resize', onWindowResize, false );
+        window.addEventListener('resize', onWindowResize, false);
 
     }
 
@@ -195,16 +210,29 @@
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    function onDocumentMouseMove( event ) {
+    function onRightCLick(event){
+
+        console.log('right')
+
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+        document.addEventListener("mouseup", function(){
+            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+        });
+
+        return false
+    }
+
+
+    function onDocumentMouseMove(event) {
         mouseX = ( event.clientX - windowHalfX ) / 2;
         mouseY = ( event.clientY - windowHalfY ) / 2;
     }
 
     function animate() {
-        requestAnimationFrame( animate );
+        requestAnimationFrame(animate);
         render();
     }
 
@@ -213,14 +241,38 @@
         //obj.rotation.x %=360;
 
         camera.position.x += ( mouseX - camera.position.x ) * .05;
-        camera.position.y += ( - mouseY - camera.position.y ) * .05;
+        camera.position.y += ( -mouseY - camera.position.y ) * .05;
 
-        camera.lookAt( scene.position );
+        camera.lookAt(scene.position);
 
-        renderer.render( scene, camera );
+        renderer.render(scene, camera);
+
+        function MouseWheelHandler(e) {
+
+            //console.log(e)
+            // cross-browser wheel delta
+            var e = window.event || e; // old IE support
+            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+
+            //camera.position.x += delta;
+            camera.position.z += delta * .1;
+            //myimage.style.width = Math.max(50, Math.min(800, myimage.width + (30 * delta))) + "px";
+
+            return false;
+        }
+
+        document.getElementById('toggleMesh').addEventListener("click", toggleMesh);
+        var body = document.body
+
+        if (body.addEventListener) {
+            // IE9, Chrome, Safari, Opera
+            body.addEventListener("mousewheel", MouseWheelHandler, false);
+            // Firefox
+            body.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+        }
+// IE 6/7/8
+        else body.attachEvent("onmousewheel", MouseWheelHandler);
     }
-
-
 
 
 </script>
