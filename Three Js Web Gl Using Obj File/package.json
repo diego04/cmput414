@@ -19,5 +19,8 @@
     "koa-route": "^2.4.2",
     "koa-static": "^2.0.0",
     "path": "^0.12.7"
+  },
+  "engines": {
+    "node": "5.1.0"
   }
 }
