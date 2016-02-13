@@ -66,5 +66,6 @@ app.use(function *(next){
 require('./routes.js');
 
 
-app.listen(8000);
+var port = process.env.PORT || 8000
+app.listen(port);
 console.log('listening on port 8000');
